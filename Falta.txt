@@ -1,0 +1,83 @@
+RUTE-AI — LISTA DE FALTANTES Y MEJORAS (DESDE MVP FUNCIONAL)
+
+A) FALTANTES PARA QUE SEA “COMPLETO” (NO SOLO MVP)
+
+1) Geocoding (búsqueda por texto)
+   - Falta: que el usuario escriba direcciones/lugares (ej. “El Beaterio”, “PUCE”) y no coordenadas.
+   - Implementación:
+     - Front: input texto + autocompletar.
+     - Back: endpoint /api/geocode que consulte Nominatim (OpenStreetMap) o Photon.
+   - Resultado: origen/destino se eligen por nombre.
+
+2) UI/UX mínima decente
+   - Falta: una interfaz clara y usable.
+   - Agregar:
+     - Layout con tarjetas: rutas (rápida/económica/balance).
+     - Selector de ruta (click).
+     - Barra de estado: “calculando”, errores, “sin resultados”.
+     - Formulario con validación.
+
+3) Selección de criterios (optimización)
+   - Falta: elegir objetivo de optimización.
+   - Agregar:
+     - “Minimizar tiempo”
+     - “Minimizar consumo”
+     - “Balanceado”
+     - “Evitar alto riesgo”
+   - Resultado: ranking y recomendación automática.
+
+4) Consumo más realista (modelo de combustible)
+   - Falta: tipo de vehículo y parámetros reales.
+   - Agregar:
+     - Tipo: auto/moto/camión
+     - Consumo base (L/100km) por tipo
+     - Precio combustible (opcional)
+   - Mejora técnica:
+     - Consumo ajustado por velocidad promedio y paradas.
+
+5) Predicción de riesgo por tramos (no solo riesgo global)
+   - Falta: el backend solo devuelve un riesgo global.
+   - Agregar:
+     - Partir la ruta en segmentos (cada 200m–500m).
+     - Calcular features por segmento.
+     - Devolver una lista segmentada:
+       - coordenadas del segmento
+       - probabilidad
+       - nivel (bajo/medio/alto)
+   - Front:
+     - dibujar segmentos con colores según nivel.
+     B) IA REAL (ENTRENAMIENTO) — SE PUEDE HACER DESPUÉS
+
+1) Dataset de accidentes
+   - Falta: datos reales para entrenar.
+   - Necesario mínimo:
+     - lat, lon (o segmento)
+     - timestamp (fecha/hora)
+     - severidad (opcional)
+     - tipo de vía/sector (opcional)
+   - Alternativas:
+     - dataset público (si existe)
+     - datos municipales (si se puede)
+     - dataset sintético (solo para demo académica)
+
+2) Feature engineering (variables para el modelo)
+   - Falta: convertir la ruta en características predictivas.
+   - Features sugeridas (MVP ML):
+     - hour (0–23)
+     - dayofweek
+     - speed_est (por tipo de vía)
+     - road_type (urbana/autopista/arterial)
+     - intersection_density (aprox)
+     - curve_index (aprox)
+     - accidents_hotspot_count (historial en radio X)
+     - rain/visibility (si usas API clima)
+     - night_flag (si es de noche)
+
+3) Entrenamiento del modelo
+   - Falta: train.py real.
+   - Recomendado:
+     - XGBoost o LightGBM
+     - validación (train/test split)
+     - métricas: AUC, precision/recall
+     - calibración de probabilidad (opcional)
+Algunas son ideas y lo que se puede hacer al futuro.

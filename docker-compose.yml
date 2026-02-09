@@ -1,0 +1,22 @@
+services:
+  osrm:
+    image: osrm/osrm-backend
+    command: ["osrm-routed", "--algorithm", "mld", "/data/ecuador-latest.osrm"]
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./osrm-data:/data
+
+  api:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - osrm
+
+  web:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
